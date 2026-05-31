@@ -4,45 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Budgeting Pengeluaran Harian</title>
-    <!-- Menggunakan Tailwind CSS untuk desain yang rapi dan responsif -->
+    <!-- Tailwind CSS untuk tata letak -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js untuk grafik estetik -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            background-color: #f7f9fc;
+            background-color: #f6f8fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
+<body class="bg-[#f8fafc] min-h-screen py-8 px-4 flex flex-col items-center justify-start gap-6">
 
-    <div class="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden border border-amber-100">
-        <!-- Header Banner Pastel -->
-        <div class="bg-gradient-to-r from-purple-200 via-indigo-200 to-blue-200 p-6 text-center border-b border-indigo-100">
+    <!-- CONTAINER UTAMA -->
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden border border-purple-50">
+        
+        <!-- HEADER BANNER PASTEL -->
+        <div class="bg-gradient-to-r from-purple-200 via-pink-200 to-blue-200 p-6 text-center border-b border-purple-100">
             <h1 class="text-2xl font-bold text-gray-700 tracking-wide flex items-center justify-center gap-2">
                 💸 Budgeting Harian
             </h1>
             <p class="text-xs text-gray-500 mt-1 italic">Catat pengeluaranmu dengan rapi & estetik</p>
         </div>
 
-        <!-- Form Input -->
+        <!-- FORM INPUT -->
         <form id="financeForm" class="p-6 space-y-4">
-            
-            <!-- Tanggal (Pastel Purple Accent) -->
+            <!-- Tanggal -->
             <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Tanggal</label>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Tanggal</label>
                 <input type="date" id="tanggal" required
-                    class="w-full px-4 py-2.5 rounded-xl border border-purple-200 bg-purple-50/30 focus:outline-none focus:ring-2 focus:ring-purple-300 text-gray-700 text-sm">
+                    class="w-full px-4 py-2.5 rounded-xl border border-purple-100 bg-purple-50/20 focus:outline-none focus:ring-2 focus:ring-purple-200 text-gray-700 text-sm">
             </div>
 
-            <!-- Kategori (Pastel Yellow Accent) -->
+            <!-- Kategori (Ada Belanja Offline) -->
             <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Kategori</label>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Kategori</label>
                 <select id="kategori" required
-                    class="w-full px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-50/30 focus:outline-none focus:ring-2 focus:ring-amber-300 text-gray-700 text-sm">
+                    class="w-full px-4 py-2.5 rounded-xl border border-amber-100 bg-amber-50/20 focus:outline-none focus:ring-2 focus:ring-amber-200 text-gray-700 text-sm">
                     <option value="" disabled selected>-- Pilih Kategori --</option>
                     <option value="Makan & Minum">🍔 Makan & Minum</option>
                     <option value="Transportasi">🚗 Transportasi</option>
                     <option value="Belanja Online">🛍️ Belanja Online</option>
+                    <option value="Belanja Offline">🛒 Belanja Offline</option>
                     <option value="Tagihan & Utilitas">⚡ Tagihan & Utilitas</option>
                     <option value="Investasi">📈 Investasi</option>
                     <option value="Hiburan">🎬 Hiburan</option>
@@ -50,44 +54,41 @@
                 </select>
             </div>
 
-            <!-- Keterangan (Pastel Blue Accent) -->
+            <!-- Keterangan -->
             <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Keterangan / Nama Barang</label>
-                <input type="text" id="keterangan" placeholder="cth: Kopi susu moka" required
-                    class="w-full px-4 py-2.5 rounded-xl border border-blue-200 bg-blue-50/30 focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-700 text-sm placeholder-gray-400">
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Keterangan</label>
+                <input type="text" id="keterangan" placeholder="cth: Token listrik / Kopi susu" required
+                    class="w-full px-4 py-2.5 rounded-xl border border-blue-100 bg-blue-50/20 focus:outline-none focus:ring-2 focus:ring-blue-200 text-gray-700 text-sm placeholder-gray-300">
             </div>
 
-            <!-- Metode Bayar (Pastel Pink Accent) -->
+            <!-- Metode Bayar (Hanya Tunai & Non-Tunai) -->
             <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Metode Bayar</label>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Metode Bayar</label>
                 <select id="metodeBayar" required
-                    class="w-full px-4 py-2.5 rounded-xl border border-pink-200 bg-pink-50/30 focus:outline-none focus:ring-2 focus:ring-pink-300 text-gray-700 text-sm">
+                    class="w-full px-4 py-2.5 rounded-xl border border-pink-100 bg-pink-50/20 focus:outline-none focus:ring-2 focus:ring-pink-200 text-gray-700 text-sm">
                     <option value="" disabled selected>-- Pilih Metode --</option>
                     <option value="Tunai">💵 Tunai</option>
-                    <option value="E-Wallet">📱 E-Wallet</option>
-                    <option value="QRIS">📷 QRIS</option>
-                    <option value="Transfer">🏦 Transfer</option>
-                    <option value="Kartu Debit">💳 Kartu Debit</option>
+                    <option value="Non-Tunai">💳 Non-Tunai</option>
                 </select>
             </div>
 
-            <!-- Nominal (Pastel Green Accent) -->
+            <!-- Nominal -->
             <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Nominal (Rp)</label>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Nominal (Rp)</label>
                 <input type="number" id="nominal" placeholder="cth: 25000" required
-                    class="w-full px-4 py-2.5 rounded-xl border border-emerald-200 bg-emerald-50/30 focus:outline-none focus:ring-2 focus:ring-emerald-300 text-gray-700 text-sm placeholder-gray-400">
+                    class="w-full px-4 py-2.5 rounded-xl border border-emerald-100 bg-emerald-50/20 focus:outline-none focus:ring-2 focus:ring-emerald-200 text-gray-700 text-sm placeholder-gray-300">
             </div>
 
-            <!-- Catatan (Pastel Gray Accent) -->
+            <!-- Catatan -->
             <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Catatan Tambahan (Opsional)</label>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Catatan Tambahan (Opsional)</label>
                 <textarea id="catatan" rows="2" placeholder="Catatan kecil..."
-                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-gray-300 text-gray-700 text-sm placeholder-gray-400 resize-none"></textarea>
+                    class="w-full px-4 py-2.5 rounded-xl border border-gray-100 bg-gray-50/30 focus:outline-none focus:ring-2 focus:ring-gray-200 text-gray-700 text-sm placeholder-gray-300 resize-none"></textarea>
             </div>
 
-            <!-- Tombol Submit -->
+            <!-- Tombol Simpan -->
             <button type="submit" id="btnSimpan"
-                class="w-full bg-gradient-to-r from-purple-300 via-indigo-300 to-blue-300 hover:from-purple-400 hover:to-blue-400 text-gray-700 font-bold py-3 px-4 rounded-xl shadow-md transition duration-300 transform active:scale-95 text-sm tracking-wide mt-2 cursor-pointer">
+                class="w-full bg-gradient-to-r from-purple-200 via-indigo-200 to-blue-200 hover:from-purple-300 hover:to-blue-300 text-gray-600 font-bold py-3 px-4 rounded-xl shadow-sm transition duration-300 transform active:scale-95 text-sm tracking-wide mt-2 cursor-pointer">
                 ✨ Simpan Pengeluaran
             </button>
         </form>
@@ -96,27 +97,103 @@
         <div id="statusMessage" class="hidden mx-6 mb-6 p-3 rounded-xl text-center text-xs font-medium"></div>
     </div>
 
-    <!-- Sistem Logika Pengiriman Data -->
+    <!-- CONTAINER DASHBOARD GRAFIK -->
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-xl p-6 border border-blue-50 space-y-4">
+        <h2 class="text-lg font-bold text-gray-600 tracking-wide text-center flex items-center justify-center gap-2">
+            📊 Dashboard Ringkasan
+        </h2>
+        
+        <!-- Box Stats Total -->
+        <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-4 text-center">
+            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Pengeluaran Bulan Ini</p>
+            <p id="totalPengeluaran" class="text-2xl font-black text-emerald-600 mt-1">Rp 0</p>
+        </div>
+
+        <!-- Area Grafik -->
+        <div class="relative flex justify-center items-center h-64 p-2 bg-slate-50/50 rounded-2xl border border-gray-50">
+            <canvas id="chartPengeluaran"></canvas>
+            <div id="chartLoading" class="absolute text-xs text-gray-400">Memuat grafik estetik...</div>
+        </div>
+    </div>
+
+    <!-- LOGIKA SISTEM -->
     <script>
-        // Set tanggal otomatis ke hari ini saat web dibuka
         document.getElementById('tanggal').valueAsDate = new Date();
 
         const form = document.getElementById('financeForm');
         const btnSimpan = document.getElementById('btnSimpan');
         const statusMessage = document.getElementById('statusMessage');
+        const totalText = document.getElementById('totalPengeluaran');
+        const chartLoading = document.getElementById('chartLoading');
 
         // ⚠️ GANTI DENGAN URL GOOGLE APPS SCRIPT KAMU
         const scriptUrl = 'https://script.google.com/macros/s/AKfycbw4wDFFVmQr63FUlMkW7jry3ZE3I8e5H-xG5iYlqB1GeGUFNYcxJ9v5-u5DAQuo14j9/exec';
+        let myChart = null;
 
+        // FUNGSI LOAD DATA & KELOLA GRAFIK
+        function muatDashboard() {
+            fetch(scriptUrl)
+            .then(res => res.json())
+            .then(res => {
+                if(res.status === 'success') {
+                    const dataSheet = res.data;
+                    
+                    // Hitung total nominal & kelompokkan per kategori
+                    let total = 0;
+                    let kategoriMap = {};
+
+                    dataSheet.forEach(item => {
+                        total += item.nominal;
+                        kategoriMap[item.kategori] = (kategoriMap[item.kategori] || 0) + item.nominal;
+                    });
+
+                    // Update Teks Total Rp
+                    totalText.textContent = 'Rp ' + total.toLocaleString('id-ID');
+
+                    // Siapkan Data untuk Chart
+                    const labels = Object.keys(kategoriMap);
+                    const values = Object.values(kategoriMap);
+
+                    // Sembunyikan tulisan loading
+                    chartLoading.classList.add('hidden');
+
+                    // Hancurkan chart lama jika ada sebelum membuat baru
+                    if(myChart) { myChart.destroy(); }
+
+                    // Gambar Chart Baru (Warna Pastel)
+                    const ctx = document.getElementById('chartPengeluaran').getContext('2d');
+                    myChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: values,
+                                backgroundColor: [
+                                    '#ffb3ba', '#ffdfba', '#ffffba', '#baffc9', 
+                                    '#bae1ff', '#e8ceff', '#ffd3e2', '#cffafe'
+                                ],
+                                borderHoverWidth: 3
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                            }
+                        }
+                    });
+                }
+            }).catch(err => console.error("Gagal memuat grafik: ", err));
+        }
+
+        // INPUT DATA BARU
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-
-            // Ubah tombol jadi mode loading
             btnSimpan.disabled = true;
-            btnSimpan.innerText = '⏳ Menyimpan data ke Sheet...';
+            btnSimpan.innerText = '⏳ Menyimpan data...';
             statusMessage.className = 'hidden';
 
-            // Kumpulkan data dari form input
             const formData = {
                 tanggal: document.getElementById('tanggal').value,
                 kategori: document.getElementById('kategori').value,
@@ -126,36 +203,34 @@
                 catatan: document.getElementById('catatan').value
             };
 
-            // Kirim data ke Google Apps Script menggunakan fetch API
             fetch(scriptUrl, {
                 method: 'POST',
-                mode: 'no-cors', // Penting agar tidak terkendala aturan CORS browser
+                mode: 'no-cors',
                 cache: 'no-cache',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             })
             .then(() => {
-                // Tampilkan pesan sukses jika berhasil
-                statusMessage.textContent = '🎉 Berhasil! Data sudah tercatat di Google Sheet.';
-                statusMessage.className = 'mx-6 mb-6 p-3 rounded-xl text-center text-xs font-medium bg-emerald-100 text-emerald-700 block';
-                
-                // Reset form input (kecuali tanggal)
+                statusMessage.textContent = '🎉 Berhasil disimpan!';
+                statusMessage.className = 'mx-6 mb-6 p-3 rounded-xl text-center text-xs font-medium bg-emerald-50 text-emerald-600 block';
                 form.reset();
                 document.getElementById('tanggal').valueAsDate = new Date();
+                
+                // Refresh dashboard grafik secara otomatis setelah input sukses
+                setTimeout(muatDashboard, 1500); 
             })
             .catch(error => {
-                // Tampilkan pesan error jika gagal
-                statusMessage.textContent = '❌ Gagal mengirim data: ' + error;
-                statusMessage.className = 'mx-6 mb-6 p-3 rounded-xl text-center text-xs font-medium bg-rose-100 text-rose-700 block';
+                statusMessage.textContent = '❌ Gagal: ' + error;
+                statusMessage.className = 'mx-6 mb-6 p-3 rounded-xl text-center text-xs font-medium bg-rose-50 text-rose-600 block';
             })
             .finally(() => {
-                // Kembalikan tombol ke keadaan semula
                 btnSimpan.disabled = false;
                 btnSimpan.innerText = '✨ Simpan Pengeluaran';
             });
         });
+
+        // Jalankan fungsi load dashboard saat pertama kali web dibuka
+        muatDashboard();
     </script>
 </body>
 </html>
