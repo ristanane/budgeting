@@ -18,7 +18,6 @@
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
-<!-- LATAR BELAKANG: Sudah diganti ke warna Pastel Gelap (Midnight Lavender) yang teduh di mata -->
 <body class="bg-[#241e30] min-h-screen py-8 px-4 flex flex-col items-center justify-center gap-6 relative">
 
     <!-- ================= TOMBOL KELUAR (Melayang di Pojok Kanan Atas) ================= -->
@@ -39,7 +38,7 @@
             <input type="password" id="pinInput" maxlength="6" placeholder="• • • • • •" autocomplete="off"
                 class="w-full text-center text-2xl tracking-widest px-4 py-3 rounded-2xl border border-white/10 bg-white/5 focus:outline-none focus:ring-2 focus:ring-purple-400 text-purple-100 font-bold placeholder-purple-300/30">
             <button id="btnVerify"
-                class="w-full bg-gradient-to-r from-purple-400 to-indigo-400 text-white font-bold py-3 rounded-xl shadow-md transition duration-200 active:scale-95 text-sm cursor-pointer hover:from-purple-500 hover:to-indigo-500">
+                class="w-full bg-purple-500 text-white font-bold py-3 rounded-xl shadow-md transition duration-200 active:scale-95 text-sm cursor-pointer hover:bg-purple-600">
                 Buka Aplikasi ✨
             </button>
             <p id="pinError" class="text-xs text-rose-400 font-medium hidden">❌ Kode akses salah, coba lagi!</p>
@@ -49,9 +48,10 @@
     <!-- ================= SCREEN 2: APLIKASI UTAMA ================= -->
     <div id="appScreen" class="w-full max-w-6xl flex flex-col md:flex-row items-center md:items-start justify-center gap-6 hidden">
         
-        <!-- COLUMN KIRI: FORM INPUT -->
+        <!-- COLUMN KIRI: FORM INPUT (Header Polos & Tombol Polos) -->
         <div class="w-full max-w-md bg-white/10 rounded-3xl shadow-2xl overflow-hidden border border-white/10 backdrop-blur-md">
-            <div class="bg-gradient-to-r from-purple-900/40 via-pink-900/30 to-blue-900/40 p-6 text-center border-b border-white/10">
+            <!-- Header diganti jadi warna ungu pastel polos solid -->
+            <div class="bg-purple-900/50 p-6 text-center border-b border-white/10">
                 <h1 class="text-2xl font-bold text-purple-100 tracking-wide flex items-center justify-center gap-2">
                     💸 Budgeting Harian
                 </h1>
@@ -109,8 +109,9 @@
                         class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 focus:outline-none focus:ring-2 focus:ring-purple-400 text-purple-100 text-sm placeholder-purple-300/30 resize-none"></textarea>
                 </div>
 
+                <!-- Tombol diganti jadi warna ungu pastel solid polos -->
                 <button type="submit" id="btnSimpan"
-                    class="w-full bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 text-white font-bold py-3 px-4 rounded-xl shadow-md transition duration-300 transform active:scale-95 text-sm tracking-wide mt-2 cursor-pointer hover:opacity-90">
+                    class="w-full bg-purple-500 text-white font-bold py-3 px-4 rounded-xl shadow-md transition duration-300 transform active:scale-95 text-sm tracking-wide mt-2 cursor-pointer hover:bg-purple-600">
                     ✨ Simpan Pengeluaran
                 </button>
             </form>
@@ -128,7 +129,6 @@
                 </button>
             </div>
 
-            <!-- KOTAK UTAMA TOTAL SALDO (Dinamis Otomatis dari Sheet) -->
             <div id="statsBox" class="bg-gradient-to-r from-emerald-950/40 to-teal-950/40 border border-emerald-500/30 rounded-2xl p-4 text-center transition-all duration-300">
                 <p class="text-xs font-semibold text-emerald-300/70 uppercase tracking-wider">Total Aktual Terpakai</p>
                 <p id="totalPengeluaran" class="text-3xl font-black text-emerald-300 mt-1">Rp 0</p>
@@ -148,7 +148,6 @@
             <div class="bg-white/5 rounded-2xl p-4 border border-white/10 space-y-3">
                 <h3 class="text-xs font-bold text-purple-300 uppercase tracking-wider mb-1 flex items-center gap-1">📋 Tracker Anggaran per Kategori</h3>
                 <div id="kategoriContainer" class="space-y-3 max-h-56 overflow-y-auto pr-1 text-sm">
-                    <!-- Progress bar disuntikkan otomatis dari JavaScript -->
                     <p class="text-xs text-purple-300/40 text-center py-2">Memuat target anggaran...</p>
                 </div>
             </div>
@@ -268,26 +267,34 @@
 
                     res.budgetKategori.forEach(item => {
                         if(item.aktual > 0) {
-                            labels.push(item.kategori.split(" ")[1] || item.kategori); // Potong emoji agar grafik bersih
+                            // Tampilkan nama kategori secara utuh agar tidak merusak tulisan yang ada karakter '&'
+                            labels.push(item.kategori); 
                             values.push(item.aktual);
                         }
 
-                        // 3. Bangun Progress Bar Kategori Pastel secara Otomatis
-                        let rawPersen = parseFloat(item.persen) || 0;
-                        let persenTampil = Math.min(rawPersen, 100);
+                        // KOREKSI PROGRESS BAR: Mengubah nilai desimal sheet (cth: 0.667) jadi angka persen bulat (67%)
+                        let nilaiPersenAsli = parseFloat(item.persen) || 0;
+                        if (nilaiPersenAsli <= 1.0 && nilaiPersenAsli > 0) {
+                            // Jika data dari sheet dikirim dalam format desimal murni (0.5 atau 1)
+                            nilaiPersenAsli = nilaiPersenAsli * 100;
+                        }
+                        
+                        let persenBulat = Math.round(nilaiPersenAsli);
+                        let lebarBar = Math.min(persenBulat, 100); // Batasi bar visual maksimal 100% agar tidak meluber keluar kotak
                         
                         let barColor = "bg-emerald-400";
-                        if(rawPersen >= 100) barColor = "bg-rose-400";
-                        else if(rawPersen >= 85) barColor = "bg-amber-400";
+                        if(persenBulat >= 100) barColor = "bg-rose-400";
+                        else if(persenBulat >= 85) barColor = "bg-amber-400";
 
                         let rowHtml = `
                             <div class="space-y-1">
                                 <div class="flex justify-between text-xs font-semibold text-purple-200">
                                     <span>${item.kategori}</span>
-                                    <span class="text-purple-300/60">${item.aktual.toLocaleString('id-ID')} / ${item.anggaran.toLocaleString('id-ID')} <b class="text-purple-200 ml-1">(${item.persen})</b></span>
+                                    <span class="text-purple-300/60">${item.aktual.toLocaleString('id-ID')} / ${item.anggaran.toLocaleString('id-ID')} <b class="text-purple-200 ml-1">(${persenBulat}%)</b></span>
                                 </div>
                                 <div class="w-full bg-white/5 h-2.5 rounded-full overflow-hidden border border-white/5">
-                                    <div class="${barColor} h-full rounded-full transition-all duration-500" style="width: ${persenTampil}%"></div>
+                                    <!-- Lebar width sekarang meluncur akurat sesuai persentase asli -->
+                                    <div class="${barColor} h-full rounded-full transition-all duration-500" style="width: ${lebarBar}%"></div>
                                 </div>
                             </div>
                         `;
@@ -297,7 +304,6 @@
                     chartLoading.classList.add('hidden');
                     if(myChart) { myChart.destroy(); }
 
-                    // Buat grafik donut bernuansa neon pastel di atas dasar gelap
                     const ctx = document.getElementById('chartPengeluaran').getContext('2d');
                     myChart = new Chart(ctx, {
                         type: 'doughnut',
@@ -370,7 +376,7 @@
             document.getElementById('tanggal').valueAsDate = new Date();
             btnSimpan.disabled = false;
             btnSimpan.innerText = '✨ Simpan Pengeluaran';
-            setTimeout(muatDashboard, 1500); // Memberi jeda waktu agar rumus Sheet selesai kalkulasi otomatis
+            setTimeout(muatDashboard, 1500); 
         }
     </script>
 </body>
