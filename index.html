@@ -164,16 +164,16 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        async function cekOtorisasi() {
-            const hashedInput = await sha256(pinInput.value);
-            if (hashedInput === TARGET_HASH) {
-                localStorage.setItem('loginSession', Date.now()); // Simpan tanda masuk
-                bukaAplikasi();
-            } else {
-                pinError.classList.remove('hidden');
-                pinInput.value = "";
-            }
-        }
+function cekOtorisasi() {
+    // Langsung mencocokkan dengan angka 000000 secara manual
+    if (pinInput.value === "000000") {
+        localStorage.setItem('loginSession', Date.now()); 
+        bukaAplikasi();
+    } else {
+        pinError.classList.remove('hidden');
+        pinInput.value = "";
+    }
+}
 
         function bukaAplikasi() {
             pinScreen.classList.add('hidden');
