@@ -10,14 +10,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            background-color: #f8fafc;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .fade-in { animation: fadeIn 0.5s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
-<body class="min-h-screen py-8 px-4 flex flex-col items-center justify-center gap-6">
+<body class="bg-purple-50 min-h-screen py-8 px-4 flex flex-col items-center justify-center gap-6">
 
     <!-- ================= SCREEEN 1: KODE AKSES (PIN) ================= -->
     <div id="pinScreen" class="w-full max-w-sm bg-white rounded-3xl shadow-xl p-6 border border-purple-50 text-center fade-in">
@@ -114,10 +113,17 @@
         <div class="w-full max-w-md bg-white rounded-3xl shadow-xl p-6 border border-blue-50 space-y-4">
             <div class="flex items-center justify-between border-b border-gray-100 pb-2">
                 <h2 class="text-lg font-bold text-gray-600 tracking-wide flex items-center gap-2">📊 Dashboard Ringkasan</h2>
-                <button id="btnRefresh" title="Refresh data grafik"
-                    class="bg-blue-50 text-blue-500 hover:bg-blue-100 px-2.5 py-1 rounded-xl text-xs font-semibold transition cursor-pointer">
-                    Refresh 🔄
-                </button>
+                <div class="flex items-center gap-2">
+                    <button id="btnRefresh" title="Refresh data grafik"
+                        class="bg-blue-50 text-blue-500 hover:bg-blue-100 px-2.5 py-1 rounded-xl text-xs font-semibold transition cursor-pointer">
+                        Refresh 🔄
+                    </button>
+                    <!-- TOMBOL KELUAR BARU -->
+                    <button id="btnLogout" title="Keluar dari aplikasi"
+                        class="bg-rose-50 text-rose-500 hover:bg-rose-100 px-2.5 py-1 rounded-xl text-xs font-semibold transition cursor-pointer">
+                        Keluar 🚪
+                    </button>
+                </div>
             </div>
             
             <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100 flex items-center justify-between gap-2 text-xs">
@@ -149,47 +155,49 @@
 
     <!-- ================= LOGIKA SISTEM UTAMA ================= -->
     <script>
-        // --- SISTEM KODE AKSES Keamanan ---
-        const TARGET_HASH = "b60d121b438a380c343d5ec3c2037564b82ffef3659cf297aa64eec6cedfe956"; // Enkripsi kode '000000'
+        // --- SISTEM KODE AKSES ---
         const pinScreen = document.getElementById('pinScreen');
         const appScreen = document.getElementById('appScreen');
         const pinInput = document.getElementById('pinInput');
         const btnVerify = document.getElementById('btnVerify');
+        const btnLogout = document.getElementById('btnLogout');
         const pinError = document.getElementById('pinError');
 
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        function cekOtorisasi() {
+            if (pinInput.value === "000000") {
+                localStorage.setItem('loginSession', Date.now()); // Simpan sesi login
+                bukaAplikasi();
+            } else {
+                pinError.classList.remove('hidden');
+                pinInput.value = "";
+            }
         }
-
-function cekOtorisasi() {
-    // Langsung mencocokkan dengan angka 000000 secara manual
-    if (pinInput.value === "000000") {
-        localStorage.setItem('loginSession', Date.now()); 
-        bukaAplikasi();
-    } else {
-        pinError.classList.remove('hidden');
-        pinInput.value = "";
-    }
-}
 
         function bukaAplikasi() {
             pinScreen.classList.add('hidden');
             appScreen.classList.remove('hidden');
             appScreen.classList.add('fade-in');
-            muatDashboard();
+            muatDashboard(); // Pastikan grafik langsung dipicu jalan di sini!
         }
 
-        // Cek pengingat login 24 Jam
+        // FUNGSI LOGOUT (Hapus sesi & kunci layar)
+        function keluarAplikasi() {
+            localStorage.removeItem('loginSession');
+            appScreen.classList.add('hidden');
+            pinScreen.classList.remove('hidden');
+            pinInput.value = "";
+            pinError.classList.add('hidden');
+        }
+
+        btnVerify.addEventListener('click', cekOtorisasi);
+        btnLogout.addEventListener('click', keluarAplikasi);
+        pinInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') cekOtorisasi(); });
+
+        // Cek pengingat login otomatis 24 Jam
         const sisaSesi = localStorage.getItem('loginSession');
         if (sisaSesi && (Date.now() - sisaSesi < 24 * 60 * 60 * 1000)) {
             bukaAplikasi();
         }
-
-        btnVerify.addEventListener('click', cekOtorisasi);
-        pinInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') cekOtorisasi(); });
 
         // --- SISTEM FORM & GRAFIK ---
         document.getElementById('tanggal').valueAsDate = new Date();
@@ -204,7 +212,7 @@ function cekOtorisasi() {
         const nominalInput = document.getElementById('nominalInput');
         const budgetLimitInput = document.getElementById('budgetLimitInput');
 
-        // ⚠️ MASUKKAN URL GOOGLE APPS SCRIPT KAMU DISINI
+        // ⚠️ MASUKKAN URL GOOGLE APPS SCRIPT & GOOGLE SHEETS KAMU DISINI
         const scriptUrl = 'https://script.google.com/macros/s/AKfycbw4wDFFVmQr63FUlMkW7jry3ZE3I8e5H-xG5iYlqB1GeGUFNYcxJ9v5-u5DAQuo14j9/exec';
         let myChart = null;
         let globalTotalPengeluaran = 0;
@@ -332,7 +340,6 @@ function cekOtorisasi() {
             setTimeout(muatDashboard, 1000);
         }
 
-        // AUTO INTEGRASI DATA OFFLINE SAAT KEMBALI ONLINE
         window.addEventListener('online', function() {
             let queue = JSON.parse(localStorage.getItem('offlineQueue') || '[]');
             if(queue.length === 0) return;
