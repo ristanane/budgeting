@@ -9,40 +9,55 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .fade-in { animation: fadeIn 0.5s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.99); } to { opacity: 1; transform: scale(1); } }
+        
+        /* Custom Slim Scrollbar */
         .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #a3b18a; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-[#d4cfc7] min-h-screen py-8 px-4 flex flex-col items-center gap-6">
+<body class="bg-[#d4cfc7] min-h-screen py-6 px-4 flex flex-col items-center gap-4">
 
-    <div class="w-full max-w-6xl flex justify-end">
-        <button id="btnLogout" class="bg-[#8fa882] text-white px-5 py-2 rounded-lg text-[10px] font-bold tracking-widest hidden hover:bg-[#3a5a40]">KELUAR</button>
+    <div class="w-full max-w-6xl flex justify-end px-2">
+        <button id="btnLogout" 
+            class="bg-[#8fa882] text-white px-5 py-2.5 rounded-xl text-[10px] font-bold tracking-widest hidden transition hover:bg-[#3a5a40] shadow-sm cursor-pointer">
+            KELUAR
+        </button>
     </div>
 
-    <!-- PIN SCREEN -->
-    <div id="pinScreen" class="w-full max-w-sm bg-white rounded-2xl shadow-xl p-8 border border-white/50 text-center">
-        <h2 class="text-xl font-bold text-[#343a30] mb-6">MASUKKAN KODE AKSES</h2>
-        <input type="password" id="pinInput" maxlength="6" placeholder="••••••" autocomplete="off"
-            class="w-full text-center text-3xl tracking-[1em] px-4 py-4 rounded-xl border border-[#d4cfc7] bg-[#fcfaf7] mb-4 focus:outline-none focus:ring-2 focus:ring-[#a3b18a]">
-        <button id="btnVerify" class="w-full bg-[#3a5a40] text-white font-bold py-3 rounded-lg hover:bg-[#2d332a]">BUKA APLIKASI</button>
-        <p id="pinError" class="text-xs text-red-500 mt-4 hidden">Kode akses salah!</p>
+    <div id="pinScreen" class="w-full max-w-sm bg-white rounded-2xl shadow-xl p-8 border border-white/50 text-center fade-in">
+        <h2 class="text-sm font-black text-[#343a30] tracking-widest mb-6">MASUKKAN KODE AKSES</h2>
+        <div class="space-y-4">
+            <input type="password" id="pinInput" maxlength="6" placeholder="••••••" autocomplete="off"
+                class="w-full text-center text-3xl tracking-[0.5em] px-4 py-3.5 rounded-xl border border-[#d4cfc7] bg-[#fcfaf7] focus:outline-none focus:ring-2 focus:ring-[#a3b18a] text-[#343a30] font-bold">
+            <button id="btnVerify"
+                class="w-full bg-[#3a5a40] text-white font-bold py-3.5 rounded-xl shadow-md transition hover:bg-[#2d332a] text-xs tracking-wider cursor-pointer">
+                BUKA APLIKASI
+            </button>
+            <p id="pinError" class="text-xs text-red-500 font-semibold hidden">Kode akses salah, coba lagi!</p>
+        </div>
     </div>
 
-    <!-- MAIN APP -->
     <div id="appScreen" class="w-full max-w-6xl flex flex-col md:flex-row items-center md:items-start justify-center gap-6 hidden">
         
-        <div class="w-full max-w-md bg-[#e2e7df] rounded-2xl shadow-lg border border-white/50 overflow-hidden">
-            <div class="bg-[#8fa882] p-6 text-center text-white"><h1 class="text-2xl font-bold tracking-wide">BUDGETING HARIAN</h1></div>
+        <div class="w-full max-w-md bg-[#e2e7df] rounded-2xl shadow-lg border border-white/40 overflow-hidden fade-in">
+            <div class="bg-[#8fa882] p-5 text-center border-b border-white/20">
+                <h1 class="text-xl font-black text-white tracking-widest">BUDGETING HARIAN</h1>
+            </div>
+
             <form id="financeForm" class="p-6 space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-[#3a5a40] uppercase mb-1">Tanggal</label>
-                    <input type="date" id="tanggal" required class="w-full px-4 py-2.5 rounded-lg border border-[#c5ccbf] bg-white focus:outline-none text-[#343a30]">
-                    <p id="hariEstetik" class="text-[10px] text-[#588157] mt-1 font-bold"></p>
+                    <label class="block text-[10px] font-bold text-[#3a5a40] uppercase tracking-wider mb-1">Tanggal</label>
+                    <input type="date" id="tanggal" required
+                        class="w-full px-4 py-2.5 rounded-xl border border-[#c5ccbf] bg-white focus:outline-none focus:ring-2 focus:ring-[#8fa882] text-[#343a30] text-sm font-medium">
+                    <p id="hariEstetik" class="text-[9px] text-[#588157] mt-1 font-bold tracking-wide"></p>
                 </div>
+
                 <div>
-                    <label class="block text-xs font-bold text-[#3a5a40] uppercase mb-1">Kategori</label>
-                    <select id="kategori" required class="w-full px-4 py-2.5 rounded-lg border border-[#c5ccbf] bg-white text-[#343a30]">
+                    <label class="block text-[10px] font-bold text-[#3a5a40] uppercase tracking-wider mb-1">Kategori</label>
+                    <select id="kategori" required
+                        class="w-full px-4 py-2.5 rounded-xl border border-[#c5ccbf] bg-white focus:outline-none focus:ring-2 focus:ring-[#8fa882] text-[#343a30] text-sm font-medium">
                         <option value="" disabled selected>Pilih Kategori</option>
                         <option value="Makan & Minum">Makan & Minum</option>
                         <option value="Transportasi">Transportasi</option>
@@ -54,61 +69,312 @@
                         <option value="Dana Darurat & Lain-lain">Dana Darurat & Lain-lain</option>
                     </select>
                 </div>
-                <div><label class="block text-xs font-bold text-[#3a5a40] uppercase mb-1">Keterangan</label><input type="text" id="keterangan" required class="w-full px-4 py-2.5 rounded-lg border border-[#c5ccbf] bg-white"></div>
-                <div><label class="block text-xs font-bold text-[#3a5a40] uppercase mb-1">Nominal (Rp)</label><input type="text" id="nominalInput" required class="w-full px-4 py-2.5 rounded-lg border border-[#c5ccbf] bg-white font-bold"></div>
-                <button type="submit" id="btnSimpan" class="w-full bg-[#8fa882] text-white font-bold py-3 rounded-lg hover:bg-[#3a5a40]">SIMPAN PENGELUARAN</button>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-[#3a5a40] uppercase tracking-wider mb-1">Keterangan</label>
+                    <input type="text" id="keterangan" placeholder="cth: Token listrik / Investasi Bibit" required
+                        class="w-full px-4 py-2.5 rounded-xl border border-[#c5ccbf] bg-white focus:outline-none focus:ring-2 focus:ring-[#8fa882] text-[#343a30] text-sm font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-[#3a5a40] uppercase tracking-wider mb-1">Metode Bayar</label>
+                    <select id="metodeBayar" required
+                        class="w-full px-4 py-2.5 rounded-xl border border-[#c5ccbf] bg-white focus:outline-none focus:ring-2 focus:ring-[#8fa882] text-[#343a30] text-sm font-medium">
+                        <option value="" disabled selected>Pilih Metode</option>
+                        <option value="Tunai">Tunai</option>
+                        <option value="Non-Tunai">Non-Tunai</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-[#3a5a40] uppercase tracking-wider mb-1">Nominal (Rp)</label>
+                    <input type="text" id="nominalInput" placeholder="cth: 25.000" required
+                        class="w-full px-4 py-2.5 rounded-xl border border-[#c5ccbf] bg-white focus:outline-none focus:ring-2 focus:ring-[#8fa882] text-[#343a30] text-sm font-bold">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-[#3a5a40] uppercase tracking-wider mb-1">Catatan Tambahan (Opsional)</label>
+                    <textarea id="catatan" rows="2" placeholder="Catatan kecil..."
+                        class="w-full px-4 py-2.5 rounded-xl border border-[#c5ccbf] bg-white focus:outline-none focus:ring-2 focus:ring-[#8fa882] text-[#343a30] text-sm font-medium resize-none"></textarea>
+                </div>
+
+                <button type="submit" id="btnSimpan"
+                    class="w-full bg-[#8fa882] text-white font-black py-3.5 px-4 rounded-xl shadow-md transition duration-200 active:scale-95 text-xs tracking-wider mt-2 cursor-pointer hover:bg-[#3a5a40]">
+                    SIMPAN PENGELUARAN
+                </button>
             </form>
+            <div id="statusMessage" class="hidden mx-6 mb-6 p-3 rounded-xl text-center text-xs font-bold"></div>
         </div>
 
-        <div class="w-full max-w-lg bg-[#f4f1eb] rounded-2xl shadow-lg p-6 border border-white/50 space-y-4">
-            <h2 class="text-sm font-bold text-[#343a30] border-b border-[#e5e1d9] pb-2">DASHBOARD RINGKASAN</h2>
-            <div id="statsBox" class="bg-white rounded-xl p-4 border border-[#e5e1d9] text-center">
-                <p class="text-[10px] text-gray-500 font-bold uppercase">Total Aktual</p>
-                <p id="totalPengeluaran" class="text-2xl font-black text-[#3a5a40]">Rp 0</p>
-                <div class="flex justify-center gap-4 text-[10px] text-gray-500 mt-2 border-t pt-2"><span id="anggaranBulanIni">Anggaran: 0</span><span id="selisihBulanIni">Sisa: 0</span></div>
+        <div class="w-full max-w-lg bg-[#f4f1eb] rounded-2xl shadow-lg p-6 border border-white/50 space-y-4 fade-in">
+            <div class="flex items-center justify-between border-b border-[#e5e1d9] pb-2">
+                <h2 class="text-xs font-black text-[#343a30] tracking-wider">DASHBOARD RINGKASAN REKAP</h2>
+                <button id="btnRefresh"
+                    class="bg-[#8fa882]/10 text-[#3a5a40] hover:bg-[#8fa882]/20 px-3 py-1.5 rounded-lg text-[10px] font-bold transition border border-[#8fa882]/20 cursor-pointer">
+                    REFRESH
+                </button>
             </div>
-            <div class="h-40 p-2"><canvas id="chartPengeluaran"></canvas></div>
-            <div id="kategoriContainer" class="space-y-3 max-h-48 overflow-y-auto custom-scroll pr-2"></div>
-            <a id="btnToSheet" href="https://docs.google.com/spreadsheets/d/1y3X7_GWuq4Yx-z6xqdD6LogRij_YO7LCM8RlaEpFb9E/edit?usp=sharing" target="_blank" class="block text-center text-[10px] font-bold text-gray-400 hover:text-[#3a5a40]">BUKA DATA LENGKAP</a>
+
+            <div id="statsBox" class="bg-white rounded-xl p-4 border border-[#e5e1d9] text-center shadow-sm transition-all duration-300">
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Total Aktual Terpakai Bulan Ini</p>
+                <p id="totalPengeluaran" class="text-2xl font-black text-[#3a5a40] mt-0.5">Rp 0</p>
+                <div class="flex justify-center gap-4 text-[10px] font-bold text-gray-500 mt-2 border-t border-gray-100 pt-2">
+                    <span id="anggaranBulanIni">Anggaran: Rp 0</span>
+                    <span id="selisihBulanIni">Sisa: Rp 0</span>
+                </div>
+            </div>
+
+            <div class="relative flex justify-center items-center h-44 p-2 bg-white rounded-xl border border-[#e5e1d9] shadow-sm">
+                <canvas id="chartPengeluaran"></canvas>
+                <div id="chartLoading" class="absolute text-[11px] font-bold text-gray-400">Memuat diagram...</div>
+            </div>
+
+            <div class="bg-white rounded-xl p-4 border border-[#e5e1d9] shadow-sm space-y-3 relative">
+                <div class="sticky top-0 bg-white z-10 pb-1 border-b border-gray-100">
+                    <h3 class="text-[10px] font-black text-[#343a30] tracking-wider">PROGRES ANGGARAN PER KATEGORI</h3>
+                </div>
+                <div id="kategoriContainer" class="space-y-3 max-h-48 overflow-y-auto pr-1 custom-scroll">
+                    <p class="text-[11px] text-gray-400 text-center py-2">Memuat target anggaran...</p>
+                </div>
+            </div>
+
+            <a id="btnToSheet" href="PASTE_URL_GOOGLE_SHEET_KAMU_DISINI" target="_blank"
+                class="w-full block text-center bg-white hover:bg-gray-50 text-gray-500 hover:text-[#3a5a40] font-bold py-2.5 px-4 rounded-xl text-[10px] tracking-wider transition border border-[#e5e1d9] shadow-sm">
+                BUKA DATA LENGKAP
+            </a>
         </div>
     </div>
 
     <script>
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbw4wDFFVmQr63FUlMkW7jry3ZE3I8e5H-xG5iYlqB1GeGUFNYcxJ9v5-u5DAQuo14j9/exec';
+        // --- SEBELUM KOPAS: MASUKKAN URL GOOGLE APPS SCRIPT KAMU DISINI ---
+        const scriptUrl = 'PASTE_URL_APPS_SCRIPT_KAMU_DISINI';
+
+        const pinScreen = document.getElementById('pinScreen');
+        const appScreen = document.getElementById('appScreen');
+        const pinInput = document.getElementById('pinInput');
+        const btnVerify = document.getElementById('btnVerify');
+        const btnLogout = document.getElementById('btnLogout');
+        const pinError = document.getElementById('pinError');
+
+        // Auto-focus kolom PIN
+        window.addEventListener('DOMContentLoaded', () => { pinInput.focus(); });
+
+        function cekOtorisasi() {
+            if (pinInput.value === "000000") {
+                localStorage.setItem('budgetAppSession', Date.now()); 
+                bukaAplikasi();
+            } else {
+                pinError.classList.remove('hidden');
+                pinInput.value = "";
+                pinInput.focus();
+            }
+        }
+
+        function bukaAplikasi() {
+            pinScreen.classList.add('hidden');
+            appScreen.classList.remove('hidden');
+            btnLogout.classList.remove('hidden'); 
+            muatDashboard(); 
+        }
+
+        function keluarAplikasi() {
+            localStorage.removeItem('budgetAppSession');
+            appScreen.classList.add('hidden');
+            btnLogout.classList.add('hidden'); 
+            pinScreen.classList.remove('hidden');
+            pinInput.value = "";
+            pinError.classList.add('hidden');
+            setTimeout(() => pinInput.focus(), 100);
+        }
+
+        btnVerify.addEventListener('click', cekOtorisasi);
+        btnLogout.addEventListener('click', keluarAplikasi);
+        pinInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') cekOtorisasi(); });
+
+        // Cek Sesi Tersimpan
+        const sisaSesi = localStorage.getItem('budgetAppSession');
+        if (sesiAktifValid()) { bukaAplikasi(); }
+        function sesiAktifValid() { return sisaSesi && (Date.now() - sisaSesi < 24 * 60 * 60 * 1000); }
+
+        // --- FORMAT HARI & TANGGAL INDONESIA ---
         const inputTanggal = document.getElementById('tanggal');
         const hariEstetik = document.getElementById('hariEstetik');
-        inputTanggal.valueAsDate = new Date();
-        
         function updateHariEstetik() {
-            const tgl = new Date(inputTanggal.value);
-            hariEstetik.textContent = tgl.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase();
+            if(!inputTanggal.value) return;
+            const opsi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const tglObj = new Date(inputTanggal.value);
+            hariEstetik.textContent = tglObj.toLocaleDateString('id-ID', opsi).toUpperCase();
         }
+        inputTanggal.valueAsDate = new Date();
         updateHariEstetik();
         inputTanggal.addEventListener('change', updateHariEstetik);
 
-        // Otorisasi & Dashboard
-        const pinInput = document.getElementById('pinInput');
-        document.getElementById('btnVerify').onclick = () => { if(pinInput.value === "000000") { pinScreen.classList.add('hidden'); appScreen.classList.remove('hidden'); btnLogout.classList.remove('hidden'); muatDashboard(); } else alert('PIN Salah'); };
-        
+        // --- ATUR FORMAT FORMAT RUPIAH AUTOMATIC ---
+        const nominalInput = document.getElementById('nominalInput');
+        nominalInput.addEventListener("input", function(e) {
+            let value = e.target.value.replace(/\D/g, "");
+            e.target.value = value ? Number(value).toLocaleString("id-ID") : "";
+        });
+        function cleanNominal(str) { return Number(str.replace(/\./g, "")); }
+
+        // --- ENGINE UNTUK CHART & TRACKER KATEGORI ---
+        const form = document.getElementById('financeForm');
+        const btnSimpan = document.getElementById('btnSimpan');
+        const btnRefresh = document.getElementById('btnRefresh');
+        const statusMessage = document.getElementById('statusMessage');
+        const totalText = document.getElementById('totalPengeluaran');
+        const anggaranText = document.getElementById('anggaranBulanIni');
+        const selisihText = document.getElementById('selisihBulanIni');
+        const statsBox = document.getElementById('statsBox');
+        const chartLoading = document.getElementById('chartLoading');
+        const kategoriContainer = document.getElementById('kategoriContainer');
+        let myChart = null;
+
         function muatDashboard() {
-            fetch(scriptUrl).then(res => res.json()).then(res => {
-                const bIni = res.bulanIni;
-                document.getElementById('totalPengeluaran').textContent = 'Rp ' + bIni.totalAktual.toLocaleString('id-ID');
-                document.getElementById('anggaranBulanIni').textContent = 'Anggaran: ' + bIni.totalAnggaran.toLocaleString('id-ID');
-                document.getElementById('selisihBulanIni').textContent = 'Sisa: ' + bIni.totalSelisih.toLocaleString('id-ID');
-                
-                let container = document.getElementById('kategoriContainer'); container.innerHTML = '';
-                res.budgetKategori.forEach(item => {
-                    let persen = Math.round((parseFloat(item.persen.toString().replace('%','')) || 0) * (item.persen.toString().includes('%') ? 1 : 100));
-                    container.innerHTML += `
-                        <div class="space-y-1">
-                            <div class="flex justify-between text-[10px] font-bold text-[#343a30]"><span>${item.kategori}</span><span>${persen}%</span></div>
-                            <div class="w-full bg-[#d4cfc7] h-2 rounded-full"><div class="bg-[#8fa882] h-2 rounded-full" style="width: ${Math.min(persen, 100)}%"></div></div>
-                        </div>`;
-                });
+            chartLoading.classList.remove('hidden');
+            chartLoading.textContent = "MEMUAT DATA...";
+            
+            fetch(scriptUrl)
+            .then(res => res.json())
+            .then(res => {
+                if(res.status === 'success') {
+                    // 1. Sinkronisasi Menu Rekap Bulanan Terkini
+                    const bIni = res.bulanIni;
+                    totalText.textContent = 'Rp ' + bIni.totalAktual.toLocaleString('id-ID');
+                    anggaranText.textContent = 'Anggaran: Rp ' + bIni.totalAnggaran.toLocaleString('id-ID');
+                    
+                    if(bIni.totalSelisih < 0) {
+                        statsBox.className = "bg-red-50 border border-red-200 rounded-xl p-4 text-center shadow-sm";
+                        totalText.className = "text-2xl font-black text-red-600 mt-0.5";
+                        selisihText.className = "text-red-500 font-bold";
+                        selisihText.textContent = 'Over Budget: Rp ' + Math.abs(bIni.totalSelisih).toLocaleString('id-ID');
+                    } else {
+                        statsBox.className = "bg-white rounded-xl p-4 border border-[#e5e1d9] text-center shadow-sm";
+                        totalText.className = "text-2xl font-black text-[#3a5a40] mt-0.5";
+                        selisihText.className = "text-[#3a5a40] font-bold";
+                        selisihText.textContent = 'Sisa: Rp ' + bIni.totalSelisih.toLocaleString('id-ID');
+                    }
+
+                    // 2. Olah Data Diagram & Progress Bar Kategori
+                    let labels = []; let values = [];
+                    kategoriContainer.innerHTML = ""; 
+
+                    res.budgetKategori.forEach(item => {
+                        if(item.aktual > 0) {
+                            labels.push(item.kategori); 
+                            values.push(item.aktual);
+                        }
+
+                        let nilaiPersen = 0;
+                        if (typeof item.persen === "string") {
+                            nilaiPersen = parseFloat(item.persen.replace('%', '')) || 0;
+                        } else {
+                            nilaiPersen = parseFloat(item.persen) || 0;
+                            if (nilaiPersen <= 1.0 && nilaiPersen > 0) { nilaiPersen = nilaiPersen * 100; }
+                        }
+                        
+                        let persenBulat = Math.round(nilaiPersen);
+                        let lebarBar = Math.min(persenBulat, 100); 
+                        
+                        // LOGIKA SELEKSI WARNA BAR: Smart Warning Indicator (Muted Earth Tone)
+                        let barColor = "bg-[#8fa882]"; // Hijau Sage Lembut (< 75%)
+                        if(persenBulat >= 100) barColor = "bg-[#e76f51]"; // Merah Terracotta Redup (Over Budget)
+                        else if(persenBulat >= 75) barColor = "bg-[#e9c46a]"; // Kuning Kayu Hangat (Siaga)
+
+                        let rowHtml = `
+                            <div class="space-y-1">
+                                <div class="flex justify-between text-[10px] font-bold text-[#343a30]">
+                                    <span>${item.kategori}</span>
+                                    <span class="text-gray-400">${item.aktual.toLocaleString('id-ID')} / ${item.anggaran.toLocaleString('id-ID')} <b class="text-[#343a30] ml-0.5">(${persenBulat}%)</b></span>
+                                </div>
+                                <div class="w-full bg-[#d4cfc7]/40 h-2.5 rounded-full overflow-hidden border border-gray-100">
+                                    <div class="${barColor} h-full rounded-full transition-all duration-700 ease-out" style="width: ${lebarBar}%"></div>
+                                </div>
+                            </div>
+                        `;
+                        kategoriContainer.insertAdjacentHTML('beforeend', rowHtml);
+                    });
+
+                    chartLoading.classList.add('hidden');
+                    if(myChart) { myChart.destroy(); }
+
+                    // 3. Render Pembuatan Diagram Donut Minimalis Modern (80% cutout)
+                    const ctx = document.getElementById('chartPengeluaran').getContext('2d');
+                    myChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: values,
+                                backgroundColor: ['#ffb3ba', '#ffdfba', '#ffffba', '#baffc9', '#bae1ff', '#e8ceff', '#ffd3e2', '#cffafe'],
+                                borderColor: '#ffffff',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: '80%',
+                            plugins: { 
+                                legend: { 
+                                    position: 'right', 
+                                    labels: { boxWidth: 6, color: '#343a30', font: { size: 8, weight: 'bold' } } 
+                                } 
+                            }
+                        }
+                    });
+                }
+            }).catch(() => {
+                chartLoading.textContent = "Gagal memuat diagram.";
+                kategoriContainer.innerHTML = '<p class="text-xs text-red-500 text-center font-bold py-2">Hubungan ke Google Sheet terputus</p>';
             });
         }
-        document.getElementById('financeForm').onsubmit = (e) => { e.preventDefault(); alert('Data terkirim!'); };
+
+        btnRefresh.addEventListener('click', muatDashboard);
+
+        // --- SISTEM POST DATA KE GOOGLE SHEET ---
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            btnSimpan.disabled = true;
+            btnSimpan.innerText = 'MENYIMPAN...';
+            statusMessage.className = 'hidden';
+
+            const formData = {
+                tanggal: document.getElementById('tanggal').value,
+                kategori: document.getElementById('kategori').value,
+                keterangan: document.getElementById('keterangan').value,
+                metodeBayar: document.getElementById('metodeBayar').value,
+                nominal: cleanNominal(nominalInput.value),
+                catatan: document.getElementById('catatan').value
+            };
+
+            fetch(scriptUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                body: JSON.stringify(formData)
+            })
+            .then(() => {
+                statusMessage.textContent = 'BERHASIL DISIMPAN LANGSUNG KE GOOGLE SHEET!';
+                statusMessage.className = 'mx-6 mb-6 p-3 rounded-xl text-center text-[10px] font-bold bg-emerald-50 text-emerald-700 block border border-emerald-200';
+                suksesResetForm();
+            })
+            .catch(() => {
+                statusMessage.textContent = 'GAGAL MENGIRIM DATA. SILAKAN COBA LAGI.';
+                statusMessage.className = 'mx-6 mb-6 p-3 rounded-xl text-center text-[10px] font-bold bg-red-50 text-red-700 block border border-red-200';
+                btnSimpan.disabled = false;
+                btnSimpan.innerText = 'SIMPAN PENGELUARAN';
+            });
+        });
+
+        function suksesResetForm() {
+            form.reset();
+            inputTanggal.valueAsDate = new Date();
+            updateHariEstetik();
+            btnSimpan.disabled = false;
+            btnSimpan.innerText = 'SIMPAN PENGELUARAN';
+            setTimeout(muatDashboard, 1500); 
+        }
     </script>
 </body>
 </html>
